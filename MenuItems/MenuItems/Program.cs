@@ -10,7 +10,6 @@ namespace MenuItems
     {
         static void Main(string[] args)
         {
-            var menuList = new List<MenuItem>();
             var path = Directory.GetCurrentDirectory();
             DirectoryInfo root = new DirectoryInfo(path);
             for (int i = 0; i < 3; i++)
@@ -20,64 +19,19 @@ namespace MenuItems
             }
             var file = Directory.GetFiles(path, "*.csv");
 
-            ParseCsvInList(file, menuList);
+            var menuList = ParseCsvInList(file);
 
+            var list = SortParsedCsvList(menuList);
+
+            Print(list);
+
+        }
+        public static List<MenuItem> ParseCsvInList(string[] files)
+        {
 
             var list = new List<MenuItem>();
-            foreach (var item in menuList)
-            {
-                MenuItem parent;
-                if (item.ParentId == null)
-                {
-                    list.Add(item);
-                }
-                else
-                {
-                    parent = menuList.SingleOrDefault(p => p.ID == item.ParentId);
-                    parent.MenuItems.Add(item);
-                }
-            }
 
-            RecursivePrint(list);
-            Console.ReadLine();
-
-            //foreach (var item in list.OrderBy(i => i.MenuName))
-            //{
-            //    Console.WriteLine($".{item.MenuName}");
-            //    foreach (var child in item.MenuItems.Where(i => i.IsHidden == false).OrderBy(i => i.MenuName))
-            //    {
-            //        Console.WriteLine($"....{child.MenuName}");
-            //        if (child.MenuItems.Any())
-            //        {
-            //            foreach (var subchild in child.MenuItems)
-            //            {
-            //                Console.WriteLine($".......{subchild.MenuName}");
-            //            }
-            //        }
-            //    }
-            //}
-
-        }
-        public static void RecursivePrint(List<MenuItem> list)
-        {
-            foreach (var item in list.Where(i => i.IsHidden == false).OrderBy(i => i.MenuName))
-            {
-                Console.WriteLine(item.MenuName);
-                if (item.MenuItems.Any())
-                {
-                    foreach (var x in item.MenuItems.Where(i => i.IsHidden == false).OrderBy(i => i.MenuName))
-                    {
-                        Console.WriteLine(x.MenuName);
-                        RecursivePrint(x.MenuItems);
-                    }
-                }
-            }
-        }
-        public static List<MenuItem> ParseCsvInList(string[] file, List<MenuItem> list)
-        {
-
-
-            using (TextFieldParser parser = new TextFieldParser(file[0]))
+            using (TextFieldParser parser = new TextFieldParser(files[0]))
             {
                 parser.TextFieldType = FieldType.Delimited;
                 parser.SetDelimiters(";");
@@ -106,7 +60,37 @@ namespace MenuItems
 
                 }
             }
+
+            return list;
+
+        }
+        public static List<MenuItem> SortParsedCsvList(List<MenuItem> menuList)
+        {
+            var list = new List<MenuItem>();
+            foreach (var item in menuList)
+            {
+                MenuItem parent;
+                if (item.ParentId == null)
+                {
+                    list.Add(item);
+                }
+                else
+                {
+                    parent = menuList.SingleOrDefault(p => p.ID == item.ParentId);
+                    parent.MenuItems.Add(item);
+                }
+            }
             return list;
         }
+        public static void Print(List<MenuItem> list)
+        {
+            foreach (var item in list.Where(i => i.IsHidden == false).OrderBy(i => i.MenuName))
+            {
+                Console.WriteLine(item.MenuName);
+                Print(item.MenuItems);
+            }
+        }
+      
+            
     }
 }
