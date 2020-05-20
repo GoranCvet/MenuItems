@@ -17,6 +17,7 @@ namespace MenuItems
                 root = Directory.GetParent(path);
                 path = root.ToString();
             }
+
             var file = Directory.GetFiles(path, "*.csv");
 
             var menuList = ParseCsvInList(file);
@@ -25,6 +26,7 @@ namespace MenuItems
 
             Print(list);
 
+        
         }
         public static List<MenuItem> ParseCsvInList(string[] files)
         {
