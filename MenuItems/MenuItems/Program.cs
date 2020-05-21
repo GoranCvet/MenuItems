@@ -18,15 +18,17 @@ namespace MenuItems
                 path = root.ToString();
             }
 
+
             var file = Directory.GetFiles(path, "*.csv");
 
             var menuList = ParseCsvInList(file);
 
             var list = SortParsedCsvList(menuList);
 
-            Print(list);
+            int level = 1;
+            Print(list, level);
 
-        
+
         }
         public static List<MenuItem> ParseCsvInList(string[] files)
         {
@@ -62,13 +64,13 @@ namespace MenuItems
 
                 }
             }
-
             return list;
 
         }
         public static List<MenuItem> SortParsedCsvList(List<MenuItem> menuList)
         {
             var list = new List<MenuItem>();
+
             foreach (var item in menuList)
             {
                 MenuItem parent;
@@ -84,15 +86,24 @@ namespace MenuItems
             }
             return list;
         }
-        public static void Print(List<MenuItem> list)
+        public static void Print(List<MenuItem> list, int level)
         {
+
             foreach (var item in list.Where(i => i.IsHidden == false).OrderBy(i => i.MenuName))
             {
-                Console.WriteLine(item.MenuName);
-                Print(item.MenuItems);
+                string dots = ".";
+                for (int i = 1; i < level; i++)
+                {
+                    dots += "...";
+                }
+                Console.WriteLine($"{dots}{item.MenuName}");
+                level++;
+
+                Print(item.MenuItems, level--);
+
             }
         }
-      
-            
+
+
     }
 }

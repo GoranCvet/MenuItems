@@ -8,7 +8,3 @@ ID;MenuName;ParentID;isHidden;LinkURL
 7;Client 4;10;True;/references/client4
 8;Client 5;10;True;/references/client5
 10;References;NULL;False;/references
-11;Goran;4;False;/team/goran
-12;Nikola;4;False;/team/nikola
-13;VIsion;1;False;/team/nikola
-14;Client 6;10;False;/team/nikola
